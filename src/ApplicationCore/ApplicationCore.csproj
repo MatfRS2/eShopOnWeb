@@ -5,6 +5,10 @@
 		<RootNamespace>Microsoft.eShopWeb.ApplicationCore</RootNamespace>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DocumentationFile>bin\Debug\netstandard2.0\ApplicationCore.xml</DocumentationFile>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" Version="1.2.3" />
 		<PackageReference Include="System.Security.Claims" Version="4.3.0" />
