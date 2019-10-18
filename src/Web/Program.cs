@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.eShopWeb.Infrastructure.Data;
-using System;
-using Microsoft.Extensions.Logging;
-using Microsoft.eShopWeb.Infrastructure.Identity;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.eShopWeb.Infrastructure.Data;
+using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Microsoft.eShopWeb.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var host = CreateWebHostBuilder(args)
                         .Build();
@@ -23,11 +24,10 @@ namespace Microsoft.eShopWeb.Web
                 try
                 {
                     var catalogContext = services.GetRequiredService<CatalogContext>();
-                    CatalogContextSeed.SeedAsync(catalogContext, loggerFactory)
-            .Wait();
+                    await CatalogContextSeed.SeedAsync(catalogContext, loggerFactory);
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    AppIdentityDbContextSeed.SeedAsync(userManager).Wait();
+                    await AppIdentityDbContextSeed.SeedAsync(userManager);
                 }
                 catch (Exception ex)
                 {
@@ -41,7 +41,6 @@ namespace Microsoft.eShopWeb.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://0.0.0.0:5106")
                 .UseStartup<Startup>();
     }
 }

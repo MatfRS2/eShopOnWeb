@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
-using Microsoft.eShopWeb.ApplicationCore.Entities;
 using System.Linq;
 using Ardalis.GuardClauses;
 using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
@@ -12,19 +11,13 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
     public class BasketService : IBasketService
     {
         private readonly IAsyncRepository<Basket> _basketRepository;
-        private readonly IUriComposer _uriComposer;
         private readonly IAppLogger<BasketService> _logger;
-        private readonly IRepository<CatalogItem> _itemRepository;
 
         public BasketService(IAsyncRepository<Basket> basketRepository,
-            IRepository<CatalogItem> itemRepository,
-            IUriComposer uriComposer,
             IAppLogger<BasketService> logger)
         {
             _basketRepository = basketRepository;
-            _uriComposer = uriComposer;
-            this._logger = logger;
-            _itemRepository = itemRepository;
+            _logger = logger;
         }
 
         public async Task AddItemToBasket(int basketId, int catalogItemId, decimal price, int quantity)
@@ -39,7 +32,6 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
         public async Task DeleteBasketAsync(int basketId)
         {
             var basket = await _basketRepository.GetByIdAsync(basketId);
-
             await _basketRepository.DeleteAsync(basket);
         }
 
@@ -67,10 +59,11 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
             {
                 if (quantities.TryGetValue(item.Id.ToString(), out var quantity))
                 {
-                    _logger.LogInformation($"Updating quantity of item ID:{item.Id} to {quantity}.");
+                    if(_logger != null) _logger.LogInformation($"Updating quantity of item ID:{item.Id} to {quantity}.");
                     item.Quantity = quantity;
                 }
             }
+            basket.RemoveEmptyItems();
             await _basketRepository.UpdateAsync(basket);
         }
 
