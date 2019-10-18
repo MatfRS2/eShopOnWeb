@@ -11,10 +11,6 @@ namespace Microsoft.eShopWeb.Infrastructure.Identity
         {
         }
 
-        public void OnConfiguring(DbContextOptionsBuilder dbCtxOptBuild)
-        {
-            base.OnConfiguring(dbCtxOptBuild);
-        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
