@@ -42,6 +42,11 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             builder.Entity<BasketItem>(ConfigureBasketItem);
         }
 
+        public void OnConfiguring(DbContextOptionsBuilder dbCtxOptBuild)
+        {
+            base.OnConfiguring(dbCtxOptBuild);
+        }
+
         private void ConfigureBasketItem(EntityTypeBuilder<BasketItem> builder)
         {
             builder.Property(bi => bi.UnitPrice)
